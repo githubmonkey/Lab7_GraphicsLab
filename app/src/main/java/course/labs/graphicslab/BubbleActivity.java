@@ -157,6 +157,8 @@ public class BubbleActivity extends Activity {
 				// TODO - Implement onSingleTapConfirmed actions.
 				// You can get all Views in mFrame using the
 				// ViewGroup.getChildCount() method
+				// TODO - ##BubbleView is not popping when clicked twice##
+				// TODO - ##BubbleView is not moving or rotating when created.##
 
 				int count = mFrame.getChildCount();
 				if (count == 0) {
