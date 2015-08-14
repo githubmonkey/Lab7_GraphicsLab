@@ -164,26 +164,21 @@ public class BubbleActivity extends Activity {
 
 				int count = mFrame.getChildCount();
 				Log.wtf(TAG, "Bubble count" + count);
-				if (count == 0) {
-					BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
-					bubbleView.start();
-					mFrame.addView(bubbleView);
-					Log.wtf(TAG, "Created a new bubble..");
-				} else {
-					for (int i = 0; i < count; i++) {
-						BubbleView child = (BubbleView) mFrame.getChildAt(i);
-						if (child.intersects(event.getRawX(), event.getRawY())) {
-							child.stop(true);
-							return true;
-						} else {
-							BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
-							bubbleView.start();
-							mFrame.addView(bubbleView);
-							Log.wtf(TAG, "Created a new bubble..");
-						}
-					}
-				}
-				return false;
+
+                for (int i = 0; i < count; i++) {
+                    BubbleView child = (BubbleView) mFrame.getChildAt(i);
+                    if (child.intersects(event.getRawX(), event.getRawY())) {
+                        child.stop(true);
+                        return true;
+                    }
+                }
+
+                BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
+                bubbleView.start();
+                mFrame.addView(bubbleView);
+                Log.wtf(TAG, "Created a new bubble..");
+
+                return false;
 
 			}
 		});
