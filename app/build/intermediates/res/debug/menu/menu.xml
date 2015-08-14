@@ -5,4 +5,4 @@
     <item android:id="@+id/menu_random_mode" android:title="@string/random_speed_mode_string"></item>
     <item android:id="@+id/quit" android:title="@string/quit_string"></item>
 </menu>
-<!-- From: file:/Users/raouldevilliers/Documents/Development/Apps/Android/Lab7_GraphicsLab/app/src/main/res/menu/menu.xml -->
+<!-- From: file:/home/sylvie/StudioProjects/Lab7_GraphicsLab_Raoul/app/src/main/res/menu/menu.xml -->
