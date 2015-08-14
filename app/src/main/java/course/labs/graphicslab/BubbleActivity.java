@@ -93,6 +93,7 @@ public class BubbleActivity extends Activity {
 			@Override
 			public void onLoadComplete(SoundPool soundPool, int i, int status) {
 				setupGestureDetector();
+				Log.wtf(TAG, "Running...");
 			}
 		});
 
@@ -117,12 +118,14 @@ public class BubbleActivity extends Activity {
 	// Set up GestureDetector
 	private void setupGestureDetector() {
 
+		Log.wtf(TAG, "BUBBLE: Setting up GestureDetector..");
 		mGestureDetector = new GestureDetector(this,
 
 		new GestureDetector.SimpleOnGestureListener() {
 
 			// If a fling gesture starts on a BubbleView then change the
 			// BubbleView's velocity
+
 
 			@Override
 			public boolean onFling(MotionEvent startFling, MotionEvent moveFling,
@@ -160,9 +163,12 @@ public class BubbleActivity extends Activity {
 				// TODO - ##BubbleView is not moving or rotating when created.##
 
 				int count = mFrame.getChildCount();
+				Log.wtf(TAG, "Bubble count" + count);
 				if (count == 0) {
 					BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
+					bubbleView.start();
 					mFrame.addView(bubbleView);
+					Log.wtf(TAG, "Created a new bubble..");
 				} else {
 					for (int i = 0; i < count; i++) {
 						BubbleView child = (BubbleView) mFrame.getChildAt(i);
@@ -173,6 +179,7 @@ public class BubbleActivity extends Activity {
 							BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
 							bubbleView.start();
 							mFrame.addView(bubbleView);
+							Log.wtf(TAG, "Created a new bubble..");
 						}
 					}
 				}
@@ -426,7 +433,7 @@ public class BubbleActivity extends Activity {
 			// TODO - Move the BubbleView
 			mXPos += mDx;
 			mYPos += mDy;
-
+			Log.wtf(TAG, "X:" + mXPos + " Y:" + mYPos);
 
 			if (mYPos < 0
 					|| mYPos > mDisplayHeight
