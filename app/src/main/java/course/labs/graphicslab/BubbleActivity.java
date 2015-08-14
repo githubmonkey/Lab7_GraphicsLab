@@ -92,9 +92,7 @@ public class BubbleActivity extends Activity {
 		mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
 			@Override
 			public void onLoadComplete(SoundPool soundPool, int i, int status) {
-				if (0 == status) {
-					setupGestureDetector();
-				}
+				setupGestureDetector();
 			}
 		});
 
@@ -138,12 +136,13 @@ public class BubbleActivity extends Activity {
 
 				for (int i = 0; i < count; i++) {
 					BubbleView child = (BubbleView) mFrame.getChildAt(i);
-					if (child.getX() == startFling.getX() && child.getY() == startFling.getY()) {
+					if (child.intersects(startFling.getRawX(), startFling.getRawY())) {
 						child.deflect(velocityX, velocityY);
+						return true;
 					}
 				}
+				return true;
 
-				return false;
 
 			}
 
@@ -167,16 +166,16 @@ public class BubbleActivity extends Activity {
 				} else {
 					for (int i = 0; i < count; i++) {
 						BubbleView child = (BubbleView) mFrame.getChildAt(i);
-						if (child.getX() == event.getX() && child.getY() == event.getY()) {
+						if (child.intersects(event.getRawX(), event.getRawY())) {
 							child.stop(true);
+							return true;
 						} else {
 							BubbleView bubbleView = new BubbleView(BubbleActivity.this, event.getX(), event.getY());
+							bubbleView.start();
 							mFrame.addView(bubbleView);
-
 						}
 					}
 				}
-
 				return false;
 
 			}
@@ -308,7 +307,7 @@ public class BubbleActivity extends Activity {
 			}
 
 			// TODO - create the scaled bitmap using size set above
-			Bitmap mScaledBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.b64);
+			Bitmap mScaledBitmap = Bitmap.createScaledBitmap(mBitmap, mScaledBitmapWidth, mScaledBitmapWidth, true);
 		}
 
 		// Start moving the BubbleView & updating the display
@@ -334,9 +333,10 @@ public class BubbleActivity extends Activity {
 					moveWhileOnScreen();
 
 				 	if (isOutOfView()) {
+						BubbleView.this.stop(true);
 						mMoverFuture.cancel(true);
 					} else {
-						postInvalidate();
+						BubbleView.this.postInvalidate();
 					}
 
 				}
@@ -348,13 +348,12 @@ public class BubbleActivity extends Activity {
 
 			// TODO - Return true if the BubbleView intersects position (x,y)
 
-			if (getX() == x && getY() == y) {
-				return true;
-			} else {
-				return false;
-			}
-
+			return ( mXPos <= x  &&
+					mXPos + mScaledBitmapWidth >= x &&
+					mYPos <= y &&
+					mYPos + mScaledBitmapWidth >= y);
 		}
+
 
 		// Cancel the Bubble's movement
 		// Remove Bubble from mFrame
@@ -411,7 +410,7 @@ public class BubbleActivity extends Activity {
 
 
 			// TODO - draw the bitmap at its new location
-			canvas.drawBitmap(mBitmap, getX(), getY(), mPainter);
+			canvas.drawBitmap(mBitmap, mXPos, mYPos, mPainter);
 
 			
 			// TODO - restore the canvas
@@ -425,13 +424,14 @@ public class BubbleActivity extends Activity {
 		private synchronized boolean moveWhileOnScreen() {
 
 			// TODO - Move the BubbleView
-			setX(getX() + mDx);
-			setY(getY() + mDy);
+			mXPos += mDx;
+			mYPos += mDy;
 
-			if (getY() < 0
-					|| getY() > mDisplayHeight
-					|| getX() < 0
-					|| getX()  > mDisplayWidth) {
+
+			if (mYPos < 0
+					|| mYPos > mDisplayHeight
+					|| mXPos < 0
+					|| mXPos  > mDisplayWidth) {
 				return false;
 			} else {
 				return true;
@@ -445,10 +445,10 @@ public class BubbleActivity extends Activity {
 			// TODO - Return true if the BubbleView is off the screen after
 			// the move operation
 
-			if (getY() < 0
-					|| getY() > mDisplayHeight
-					|| getX() < 0
-					|| getX()  > mDisplayWidth) {
+			if (mYPos < 0
+					|| mYPos > mDisplayHeight
+					|| mXPos < 0
+					|| mXPos  > mDisplayWidth) {
 				return true;
 			} else {
 				return false;
